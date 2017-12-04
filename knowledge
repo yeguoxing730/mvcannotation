@@ -1,0 +1,33 @@
+http://412887952-qq-com.iteye.com/blog/2292388
+
+-----0001
+启动redis
+cd C:\Program Files\Redis
+ start server
+     redis-server.exe conf\redis.conf
+ start client
+     redis-cli.exe -h 127.0.0.1 -p 6379
+ set hello helloworld
+ get hello
+
+
+
+keys                 查看所有的keys
+flushdb              清空缓存的数据
+
+
+ALTER TABLE demo MODIFY COLUMN id INT auto_increment;
+
+---00002
+rabbitMQ
+cd C:\Program Files\RabbitMQ Server\rabbitmq_server-3.6.2\sbin
+
+
+
+
+---日志记录 slf4j
+在代码中调用：
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+private Logger logger =  LoggerFactory.getLogger(this.getClass());
+

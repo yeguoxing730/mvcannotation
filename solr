@@ -1,0 +1,40 @@
+1.下载 solr
+  C:\Users\uc203808\Desktop\workinfo\java\solr\solr server\solr-6.1.0
+2.启动solr
+   C:\Users\uc203808\Desktop\workinfo\java\solr\solr server\solr-6.1.0\bin\solr.cmd start
+   solr.cmd start -p 8984
+   solr.cmd stop -p 8983
+   solr.cmd status
+4.访问solr
+ http://localhost:8983/solr
+
+ http://localhost:8983/solr/jcg/update
+solr start -h localhost -p 8983 -d server -s solr -m 512m
+solr start -Dsolr.autoSoftCommit.maxTime=3000
+
+ solr start -p 8983
+--create core
+ C:\Users\uc203808\Desktop\workinfo\java\solr\solr server\solr-6.1.0\bin\
+ solr create -c jcg
+ cd  C:\Users\uc203808\Desktop\workinfo\java\solr\solr server\solr-6.1.0\example\exampledocs
+
+ ----indexing xml
+  java -Dc=jcg -jar post.jar hd.xml
+  java -Dc=jcg -jar post.jar -d '<delete><id>42</id></delete>'
+ ----indexing json
+  java -Dc=jcg -jar post.jar books.json
+ ----indexing pdf world html
+  java -Dc=jcg -jar post.jar sample.html
+  java -Dc=jcg -jar post.jar solr-word.pdf
+ ----indexing csv
+  java -Dc=jcg -jar post.jar books.csv
+
+  java -Dc=jcg -jar post.jar  -params "separator=%09" -type text/csv data.tsv
+ ----indexing folder
+   java -Dauto -Dc=jcg -Drecurive -jar post.jar afolder
+The bin/solr script can also help you create new collections (in SolrCloud mode) or cores (in standalone mode), or delete collections.
+
+
+
+ solr create -c solrNewCore
+ java -Dc=solrNewCore -jar post.jar monitor.xml

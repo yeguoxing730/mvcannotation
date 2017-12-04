@@ -1,0 +1,12 @@
+1.下载 activemq
+  C:\Users\uc203808\Desktop\workinfo\java\apache-activemq-5.11.4
+2.修改 activemq 端口
+  C:\Users\uc203808\Desktop\workinfo\java\apache-activemq-5.11.4\conf\activemq.xml
+  <transportConnectors>
+      <transportConnector name="amqp" uri="amqp://0.0.0.0:56721?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+3.启动服务
+  C:\Users\uc203808\Desktop\workinfo\java\apache-activemq-5.11.4\bin\win64\activemq.bat start
+4.访问activeMQ
+  http://localhost:8161/admin/
+  user:admin
+  pass:admin

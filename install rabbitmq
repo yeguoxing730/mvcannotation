@@ -1,0 +1,77 @@
+1.下载并安装 Eralng OTP for windows
+增加一个系统环境变量ERLANG_HOME配置为C:\Program Files\erl5.9.1
+2.运行安装 Rabbit MQ Server Windows Installer (v3.2.3)
+默认安装的Rabbit MQ 监听端口是5672
+使用Rabbit MQ 管理插件，可以更好的可视化方式查看Rabbit MQ 服务器实例的状态，你可以在命令行中使用下面的命令激活：
+C:\Program Files\RabbitMQ Server\rabbitmq_server-3.6.2\sbin
+cd /sbin
+ rabbitmq-server start
+ SET HOMEDRIVE=C:
+ rabbitmq-plugins enable rabbitmq_management启用监控管理
+"C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin\rabbitmq-plugins.bat" enable rabbitmq_management
+
+要重启服务才能生效，可以执行
+
+net stop RabbitMQ && net start RabbitMQ
+
+下面我们使用rabbitmqctl控制台命令（位于C:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin>）来创建用户，密码，绑定权限等。
+
+Microsoft Windows [版本 6.3.9600]
+(c) 2013 Microsoft Corporation。保留所有权利。
+
+c:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin 的目录
+
+2014/11/01  15:04    <DIR>          .
+2014/11/01  15:04    <DIR>          ..
+2014/01/23  22:57               817 rabbitmq-echopid.bat
+2014/01/23  22:57             1,900 rabbitmq-plugins.bat
+2014/01/23  22:57             4,356 rabbitmq-server.bat
+2014/01/23  22:57             7,123 rabbitmq-service.bat
+2014/01/23  22:57             1,621 rabbitmqctl.bat
+               5 个文件         15,817 字节
+               2 个目录 96,078,618,624 可用字节
+
+c:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin>rabbitmqctl.bat list_users
+Listing users ...
+guest   [administrator]
+...done.
+
+c:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin>rabbitmqctl.bat list_vhosts
+Listing vhosts ...
+/
+...done.
+
+c:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin>rabbitmqctl.bat add_user geffzhang zsy@2014
+Creating user "geffzhang" ...
+...done.
+
+c:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin>rabbitmqctl.bat list_users
+Listing users ...
+geffzhang       []
+guest   [administrator]
+...done.
+
+c:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin>rabbitmqctl.bat set_user_tags geffzhang administrator
+Setting tags for user "geffzhang" to [administrator] ...
+...done.
+
+c:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin>rabbitmqctl.bat set_permissions -p /  geffzhang ".*" ".*" ".*"
+Setting permissions for user "geffzhang" in vhost "/" ...
+...done.
+
+c:\Program Files (x86)\RabbitMQ Server\rabbitmq_server-3.2.3\sbin>rabbitmqctl.bat list_users
+Listing users ...
+geffzhang       [administrator]
+guest   [administrator]
+...done.
+
+使用浏览器打开http://localhost:15672 访问Rabbit Mq的管理控制台，使用刚才创建的账号登陆系统：
+
+set HOMEDRIVE=C:\rabbit
+rabbitmqctl.bat add_user yeguoxing yeguoxing
+rabbitmqctl.bat list_users
+rabbitmqctl.bat set_user_tags yeguoxing administrator
+rabbitmqctl.bat set_permissions -p /  yeguoxing ".*" ".*" ".*"
+rabbitmqctl.bat list_users
+
+rabbitmqctl stop
