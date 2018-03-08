@@ -1,4 +1,4 @@
-package com.boot.environment;
+package com.mvc4.environment;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.bind.RelaxedPropertyResolver;

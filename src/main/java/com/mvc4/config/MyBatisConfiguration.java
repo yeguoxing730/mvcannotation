@@ -1,4 +1,4 @@
-package com.boot.config;
+package com.mvc4.config;
 
 import com.github.pagehelper.PageHelper;
 import org.mybatis.spring.annotation.MapperScan;

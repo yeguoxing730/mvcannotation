@@ -1,4 +1,4 @@
-package com.boot.HealthIndicator;
+package com.mvc4.HealthIndicator;
 
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;

@@ -1,4 +1,4 @@
-package com.boot.servlet;
+package com.mvc4.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

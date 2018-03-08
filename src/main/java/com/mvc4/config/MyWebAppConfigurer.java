@@ -1,7 +1,7 @@
-package com.boot.config;
+package com.mvc4.config;
 
-import com.boot.interceptor.MyInterceptor;
-import com.boot.interceptor.MyInterceptorTwo;
+import com.mvc4.interceptor.MyInterceptor;
+import com.mvc4.interceptor.MyInterceptorTwo;
 import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
