@@ -1,6 +1,6 @@
-package com.boot.web;
+package com.mvc4.web;
 
-import com.boot.entity.DemoInfo;
+import com.mvc4.entity.DemoInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/redis")
 public class RedisDemoInfoController {
     @Autowired
-    com.boot.service.DemoInfoService demoInfoService;
+    com.mvc4.service.DemoInfoService demoInfoService;
     @RequestMapping("/test")
     public @ResponseBody
     String test(){

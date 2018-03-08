@@ -1,4 +1,4 @@
-package com.boot.config;
+package com.mvc4.config;
 
 /**
  * Created with IntelliJ IDEA.

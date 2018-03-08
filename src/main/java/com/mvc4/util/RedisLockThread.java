@@ -1,4 +1,4 @@
-package com.boot.util;
+package com.mvc4.util;
 
 import redis.clients.jedis.Jedis;
 

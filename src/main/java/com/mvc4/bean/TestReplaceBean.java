@@ -1,4 +1,4 @@
-package com.boot.bean;
+package com.mvc4.bean;
 
 /**
  * Created with IntelliJ IDEA.

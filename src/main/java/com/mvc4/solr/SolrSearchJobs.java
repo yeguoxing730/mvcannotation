@@ -1,4 +1,4 @@
-package com.boot.solr;
+package com.mvc4.solr;
 
 
 import org.apache.solr.client.solrj.SolrQuery;

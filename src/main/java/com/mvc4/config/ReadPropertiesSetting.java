@@ -1,6 +1,5 @@
-package com.boot.config;
+package com.mvc4.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * Created with IntelliJ IDEA.

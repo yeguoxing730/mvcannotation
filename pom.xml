@@ -17,28 +17,75 @@
         <java.version>1.8</java.version>
         <amq.version>5.4.2</amq.version>
         <junit.version>4.12</junit.version>
-        <start-class>com.com.boot.config.JmsJavaconfigApplication</start-class>
+        <!--<start-class>com.com.boot.config.JmsJavaconfigApplication</start-class>-->
     </properties>
-
     <dependencies>
+        <!--单元测试-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Servlet API, JSTL -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <!--日志配置-->
+        <dependency>               
+            <groupId>log4j</groupId>                
+            <artifactId>log4j</artifactId>                 
+            <version>1.2.17</version>                
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.6</version>
+        </dependency>
+        <!--memory cached 缓存客户端 spymemcached 是一个 memcache 的客户端， 使用 NIO 实现-->
+        <!--<dependency>-->
+            <!--<groupId>spy</groupId>-->
+            <!--<artifactId>spymemcached</artifactId>-->
+            <!--<version>2.8.12</version>-->
+        <!--</dependency>-->
+
         <!--spring dependencies begin-->
+         <!--字节码使用-->
         <dependency>
             <groupId>asm</groupId>
             <artifactId>asm-commons</artifactId>
             <version>3.3.1</version>
         </dependency>
-
         <dependency>
             <groupId>asm</groupId>
             <artifactId>asm</artifactId>
             <version>3.3.1</version>
         </dependency>
+        <!--
+            这个jar 文件是所有应用都要用到的，它包含访问配置文件、创建和管理bean 以及进行
+            Inversion ofControl / Dependency Injection（IoC/DI）操作相关的所有类。
+            如果应用只需基本的IoC/DI 支持，引入spring-core.jar 及spring-beans.jar 文件就可以了。
+            外部依赖spring-core，(CGLIB)。
+        -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>4.3.7.RELEASE</version>
+        </dependency>
+        <!--
+        这个jar 文件包含Spring 框架基本的核心工具类。Spring 其它组件要都要使用到这个包里的类，
+        是其它组件的基本核心，当然你也可以在自己的应用系统中使用这些工具类。
+        外部依赖Commons Logging， (Log4J)。
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -50,6 +97,10 @@
             <artifactId>spring-web</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <!--包含Spring对DAO特性集进行了扩展，使其支持iBATIS、JDO、OJB、TopLink，
+         因为Hibernate已经独立成包了，现在不包含在这个包里了。
+        这个jar文件里大部分的类都要依赖spring-dao.jar里的类，用这个包时你需要同时包含spring-dao.jar包。
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -60,16 +111,13 @@
             <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
@@ -80,7 +128,6 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
@@ -96,8 +143,27 @@
             <artifactId>spring-jms</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <!--
+       这个jar文件为Spring 核心提供了大量扩展。可以找到使用Spring ApplicationContext特性时所需的
+       全部类，JDNI 所需的全部类，instrumentation组件以及校验Validation 方面的相关类。
+       外部依赖spring-beans, (spring-aop)。
+       -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!--
+        包含支持缓存Cache（ehcache）、JCA、JMX、 邮件服务（Java Mail、COS Mail）、任务计划Scheduling（Timer、Quartz）方面的类。
+        以前的版本中应该是这个：spring-support.jar这个jar 文件包含支持UI模版（Velocity，FreeMarker，JasperReports），邮件服务，脚本服务(JRuby)，缓存Cache（EHCache），任务计划Scheduling（uartz）方面的类。
+        外部依赖spring-context, (spring-jdbc, Velocity, FreeMarker, JasperReports, BSH, Groovy,JRuby, Quartz, EHCache)
+        -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
         <!--spring dependencies end-->
-
 
 
 
@@ -108,11 +174,7 @@
           缓存Cache（EHCache），
           任务计划Scheduling（uartz）。
        -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
+
 
         <!--fastjson 配置 -->
         <dependency>
@@ -249,6 +311,11 @@ spring-com.boot mybatis依赖：
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-core</artifactId>
             <version>6.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.sonatype.aether</groupId>
+            <artifactId>aether-api</artifactId>
+            <version>1.7</version>
         </dependency>
 
     </dependencies>

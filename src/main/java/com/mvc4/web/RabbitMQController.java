@@ -1,6 +1,6 @@
-package com.boot.web;
+package com.mvc4.web;
 
-import com.boot.message.Sender;
+import com.mvc4.message.Sender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

@@ -1,4 +1,4 @@
-package com.boot.aop;
+package com.mvc4.aop;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -43,7 +43,7 @@ public class WebLogAspect {
      * ~ 第五个 * 任意方法
      * ~ .. 匹配任意数量的参数.
      */
-    @Pointcut("execution(public * com.boot.web.*.*(..))")
+    @Pointcut("execution(public * com.mvc4.web.*.*(..))")
     public void webLog(){}
 
     @Before("webLog()")

@@ -1,6 +1,6 @@
-package com.boot.message;
+package com.mvc4.message;
 
-import com.boot.config.AmqpConfig;
+import com.mvc4.config.AmqpConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;

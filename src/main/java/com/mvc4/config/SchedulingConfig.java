@@ -1,4 +1,4 @@
-package com.boot.config;
+package com.mvc4.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

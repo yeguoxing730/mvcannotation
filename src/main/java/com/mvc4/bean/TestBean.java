@@ -1,4 +1,4 @@
-package com.boot.bean;
+package com.mvc4.bean;
 
 import java.util.*;
 

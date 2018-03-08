@@ -1,4 +1,4 @@
-package com.boot.util;
+package com.mvc4.util;
 
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;

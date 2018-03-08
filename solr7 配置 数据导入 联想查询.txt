@@ -1,0 +1,83 @@
+﻿1.download jkd and tomcat 8.5.24
+       config tomcat           
+           CATALINA_BASE      E:\tomcat8
+           CATALINA_HOME      E:\tomcat8
+           TOMCAT_HOME        E:\tomcat8
+2.download solr7.2.1
+ 拷贝E:\solr7\server\solr-webapp里面webapp文件到tomcat安装目录webapps下，并重命名为solr
+3.server\lib\ext内的所有jar包、server\lib内以metrics开头的所有jar包，
+ 以及gmetric4j-1.0.7.jar复制到tomcat安装目录下的webapps\solr\WEB-INF\lib下
+4.在tomcat安装目录下的webapps\solr\WEB-INF中，新建一个classes文件夹，
+将解压后的solr-7.1.0文件夹下server\resources内的log4j.properties文件拷贝到里面
+5.修改Tomcat\bin下的catalina.bat，增加solr.log.dir系统变量，指定solr日志记录存放地址
+if not "%JSSE_OPTS%" == "" goto gotJsseOpts  
+set JSSE_OPTS="-Djdk.tls.ephemeralDHKeySize=2048"  
+:gotJsseOpts  
+set "JAVA_OPTS=%JAVA_OPTS% %JSSE_OPTS%" --增加下一行  
+set "JAVA_OPTS=%JAVA_OPTS% -Dsolr.log.dir=E:\solr_home\logs" 
+6. 在任意地方创建文件夹solr_home（E:\solr_home\logs），把solr-7.1.0\server下solr下的所有文件复制到这个solr_home下，在这里，我创建在Solr-7.1.0的同级目录下了，
+并且修改配置文件Tomcat\webapps\solr\WEB-INF\web.xml，将下面配置的注释放开，黑体部分更改为你的solr-home地址。
+
+<env-entry>  
+       <env-entry-name>solr/home</env-entry-name>  
+       <env-entry-value>E:\solr_home</env-entry-value>  
+       <env-entry-type>java.lang.String</env-entry-type>  
+</env-entry>
+<!-- Get rid of error message   
+  <security-constraint>  
+    <web-resource-collection>  
+      <web-resource-name>Disable TRACE</web-resource-name>  
+      <url-pattern>/</url-pattern>  
+      <http-method>TRACE</http-method>  
+    </web-resource-collection>  
+    <auth-constraint/>  
+  </security-constraint>  
+  <security-constraint>  
+    <web-resource-collection>  
+      <web-resource-name>Enable everything but TRACE</web-resource-name>  
+      <url-pattern>/</url-pattern>  
+      <http-method-omission>TRACE</http-method-omission>  
+    </web-resource-collection>  
+  </security-constraint>  
+-->  
+
+6. 配合solr日志记录存放地址，在solr-home下新建logs文件夹，此处与配置4位置配置路径一致； 
+7. 拷贝solr-7.1.0下contrib和dist文件夹至solr-home目录下。 
+8. 在solr-home目录下新建new_core文件夹；并拷贝solr-7.1.0\server\solr\configsets_default\目录下conf文件夹至solr-home\new_core下。 
+9. 修改solr-home\new_core\conf\solrconfig.xml文件，如下
+<!--  
+  <lib dir="${solr.install.dir:../../../..}/contrib/extraction/lib" regex=".*\.jar" />  
+  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-cell-\d.*\.jar" />  
+  
+  <lib dir="${solr.install.dir:../../../..}/contrib/clustering/lib/" regex=".*\.jar" />  
+  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-clustering-\d.*\.jar" />  
+  
+  <lib dir="${solr.install.dir:../../../..}/contrib/langid/lib/" regex=".*\.jar" />  
+  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-langid-\d.*\.jar" />  
+  
+  <lib dir="${solr.install.dir:../../../..}/contrib/velocity/lib" regex=".*\.jar" />  
+  <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-velocity-\d.*\.jar" />  
+  -->  
+    <lib dir="${solr.install.dir:../}/contrib/extraction/lib" regex=".*\.jar" />  
+    <lib dir="${solr.install.dir:../}/dist/" regex="solr-cell-\d.*\.jar" />  
+  
+    <lib dir="${solr.install.dir:../}/contrib/clustering/lib/" regex=".*\.jar" />  
+    <lib dir="${solr.install.dir:../}/dist/" regex="solr-clustering-\d.*\.jar" />  
+  
+    <lib dir="${solr.install.dir:../}/contrib/langid/lib/" regex=".*\.jar" />  
+    <lib dir="${solr.install.dir:../}/dist/" regex="solr-langid-\d.*\.jar" />  
+  
+    <lib dir="${solr.install.dir:../}/contrib/velocity/lib" regex=".*\.jar" />  
+    <lib dir="${solr.install.dir:../}/dist/" regex="solr-velocity-\d.*\.jar" />  
+    <lib dir="${solr.install.dir:../}/dist/" regex="ojdbc\d.*\.jar" />  
+    <lib dir="${solr.install.dir:../}/dist/" regex="solr-dataimporthandler\d.*\.jar" /> 
+10.修改tomcat server.xml
+  Connector 8097
+  AJP 8026
+  Server 8062  
+10. 启动Tomcat，访问http://localhost:8097/solr/index.html 
+11. 配置Ik分词器，首先导入ik的jar  ik-analyzer-solr5-5.x 和 solr-analyzer-ik-5.1.0 两个jar包
+
+导入Tomcat\webapps\solr\WEB-INF\lib下
+
+ 然后配置solr_home\new_core\conf下的managed-schema文件加入
