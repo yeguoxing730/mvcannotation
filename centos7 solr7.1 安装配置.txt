@@ -1,0 +1,220 @@
+﻿step0:
+ cd /opt
+ wget http://mirror.bit.edu.cn/apache/lucene/solr/7.1.0/solr-7.1.0.tgz
+ tar -zxvf solr-7.1.0.tgz
+ mv solr-7.1.0 solr7
+ wget http://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.2/bin/apache-tomcat-9.0.2.tar.gz
+ tar -zxvf apache-tomcat-9.0.2.tar.gz
+ mv apache-tomcat-9.0.2  tomcat9
+ 
+ 
+mkdir /opt/tomcat9/webapps/solr7
+##copy libs
+cp -r /opt/solr7/server/solr-webapp/webapp/* /opt/tomcat9/webapps/solr7
+cp -r /opt/solr7/server/lib/ext/* /opt/tomcat9/webapps/solr7/WEB-INF/lib
+cp -r /opt/solr7/server/lib/metrics*.jar /opt/tomcat9/webapps/solr7/WEB-INF/lib
+cp -r /opt/solr7/dist/solr-dataimporthandler-*.jar /opt/tomcat9/webapps/solr7/WEB-INF/lib
+##copy classes
+mkdir /opt/tomcat9/webapps/solr7/WEB-INF/classes
+cp /opt/solr7/server/resources/log4j.properties /opt/tomcat9/webapps/solr7/WEB-INF/classes
+mkdir /opt/solrhome
+cp /opt/solr7/server/solr/* /opt/solrhome
+
+ vim /opt/tomcat9/webapps/solr7/WEB-INF/web.xml
+  找到eny-entry标签,去掉注释,并将env-entry-value设置成刚刚新建的solrhome的地址(/opt/solrhome)
+  找到security-constraint,并注释掉,有两个,在文件末尾.
+  
+  启动Tomcat
+  http://localhost:6060/solr7/index.html
+  
+  
+  
+step1:导入mysql 数据到solr  
+  cd /opt/tomcat9/webapps/solr7/WEB-INF/lib/
+ wget  http://central.maven.org/maven2/mysql/mysql-connector-java/6.0.6/mysql-connector-java-6.0.6.jar
+  /opt/tomcat9/webapps/solr7/WEB-INF/lib
+  cp /opt/solr7/dist/lib/solr-dataimporthandler-7.1.0.jar /opt/tomcat9/webapps/solr7/WEB-INF/lib/
+  cp /opt/solr7/dist/lib/solr-dataimporthandler-extras-7.1.0.jar /opt/tomcat9/webapps/solr7/WEB-INF/lib/
+
+
+  cp -r /opt/solr7/example/example-DIH/solr /opt/solrhome
+  mkdir /opt/solrhome/solr/mysqlcore
+  mkdir /opt/solrhome/solr/mysqlcore/conf
+  mkdir /opt/solrhome/solr/mysqlcore/data
+  vi /opt/solrhome/solr/mysqlcore/core.properties 
+   name=mysqlcore
+  
+  cp -r /opt/solr7/server/solr/configsets/sample_techproducts_configs/conf/* /opt/solrhome/solr/mysqlcore/conf
+  vi /opt/solrhome/solr/mysqlcore/conf/db-data-config.xml
+  <dataConfig>
+  <dataSource type="JdbcDataSource" 
+              driver="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://127.0.0.1:3306/mysql?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai" 
+              user="root" 
+              password="Welcome1"/>
+  <document>
+    <!--指定需要导入的数据库表名，以及数据 -->
+    <entity name="goods_info" 
+            query="select id,name,count from goods">
+    </entity>
+  </document>
+</dataConfig>
+
+create table goods(id int,name varchar(255),count int)
+
+
+
+cd /opt/solrhome/solr/mysqlcore/conf
+vi solrconfig.xml
+<requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler">
+        <lst name="defaults">
+          <str name="config">db-data-config.xml</str>
+        </lst>
+</requestHandler>
+
+vi managed-schema
+    <field name="name" type="text_ik" indexed="true" stored="true" multiValued="false"/>
+    <field name="count" type="string" indexed="false" stored="true" multiValued="false"/>
+    <fieldType name="text_ik" class="solr.TextField">
+ 　　　 <analyzer class="org.wltea.analyzer.lucene.IKAnalyzer"/>
+    </fieldType>
+	
+
+添加中文分词支持
+
+wget https://link.jianshu.com/?t=http://files.cnblogs.com/files/wander1129/ikanalyzer-solr6.5.zip
+unzip ikanalyzer-solr6.5.zip
+ mv ikanalyzer-solr5/ ik
+ cd ik
+ ext.dic为扩展字典,stopword.dic为停止词字典，IKAnalyzer.cfg.xml为配置文件，solr-analyzer-ik-5.1.0.jar ik-analyzer-solr5-5.x.jar为分词jar包。
+
+将文件夹下的IKAnalyzer.cfg.xml , ext.dic和stopword.dic 三个文件 复制到/webapps/solr/WEB-INF/classes 目录下，并修改IKAnalyzer.cfg.xml
+cp -r /opt/ik/IKAnalyzer.cfg.xml /opt/tomcat9/webapps/solr7/WEB-INF/classes
+cp -r /opt/ik/ext.dic /opt/tomcat9/webapps/solr7/WEB-INF/classes
+cp -r /opt/ik/stopword.dic /opt/tomcat9/webapps/solr7/WEB-INF/classes
+vi /opt/tomcat9/webapps/solr7/WEB-INF/classes/IKAnalyzer.cfg.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+        <comment>IK Analyzer 扩展配置</comment>
+        <!--用户可以在这里配置自己的扩展字典 -->
+        <entry key="ext_dict">ext.dic;</entry>
+        <!--用户可以在这里配置自己的扩展停止词字典-->
+        <entry key="ext_stopwords">stopword.dic;</entry>
+
+</properties>
+
+cp -r /opt/ik/solr-analyzer-ik-5.1.0.jar ik-analyzer-solr5-5.x.jar /opt/tomcat9/webapps/solr7/WEB-INF/lib/
+sh /opt/tomcat9/bin/shutdown.sh 
+sh /opt/tomcat9/bin/startup.sh 
+http://blog.csdn.net/u010942465/article/details/51287768
+
+
+
+pinyin
+
+wget https://link.jianshu.com/?t=http://files.cnblogs.com/files/wander1129/pinyin.zip
+cp -r pinyin4j-2.5.0.jar  pinyinAnalyzer4.3.1.jar /opt/tomcat9/webapps/solr7/WEB-INF/lib/
+vi /opt/solrhome/solr/mysqlcore/conf/managed-schema
+<fieldType name="text_pinyin" class="solr.TextField" positionIncrementGap="0">
+    <analyzer type="index">
+        <tokenizer class="org.apache.lucene.analysis.ik.IKTokenizerFactory"/>
+        <filter class="com.shentong.search.analyzers.PinyinTransformTokenFilterFactory" minTermLenght="2" />
+        <filter class="com.shentong.search.analyzers.PinyinNGramTokenFilterFactory" minGram="1" maxGram="20" />
+    </analyzer>
+    <analyzer type="query">
+        <tokenizer class="org.apache.lucene.analysis.ik.IKTokenizerFactory"/>
+        <filter class="com.shentong.search.analyzers.PinyinTransformTokenFilterFactory" minTermLenght="2" />
+        <filter class="com.shentong.search.analyzers.PinyinNGramTokenFilterFactory" minGram="1" maxGram="20" />
+    </analyzer>
+</fieldType>
+
+sh /opt/tomcat9/bin/shutdown.sh 
+sh /opt/tomcat9/bin/startup.sh 
+
+
+添加联想查询功能
+vi manage-schema.xml
+<field name="name" type="text_ik" multiValued="false" indexed="true" stored="true"/>  
+<copyField source="name" dest="suggestion"/>  
+<fieldType name="text_ik" class="solr.TextField">  
+    <analyzer isMaxWordLength="true" class="org.wltea.analyzer.lucene.IKAnalyzer"/>  
+</fieldType>  
+
+
+<fieldType name="text_suggest" class="solr.TextField">  
+   <analyzer type="index">  
+     <tokenizer class="solr.KeywordTokenizerFactory"/>  
+     <filter class="solr.LowerCaseFilterFactory"/>  
+   </analyzer>  
+   <analyzer type="query">  
+     <tokenizer class="solr.KeywordTokenizerFactory"/>  
+     <filter class="solr.LowerCaseFilterFactory"/>  
+   </analyzer>  
+ </fieldType>
+
+vi solrconfig.xml
+<searchComponent name="suggest" class="solr.SuggestComponent">  
+        <lst name="suggester">  
+            <str name="name">suggest</str>  
+            <str name="lookupImpl">AnalyzingLookupFactory</str>  
+            <str name="dictionaryImpl">DocumentDictionaryFactory</str>  
+            <str name="field">suggestion</str>  
+            <str name="suggestAnalyzerFieldType">text_suggest</str>  
+            <str name="buildOnStartup">false</str>  
+        </lst>  
+    </searchComponent>  
+name为该suggest模块的名字；lookUpImpl为查找器，默认为JaspellLookupFactory；dictionaryImpl为字典实现；field为要联想的字段；
+suggestAnalyzerFieldType规定了进行联想操作所使用类型所对应的Analyzer（该字段必填）；buildOnStartup表示是否在启动时建立索引。
+       
+
+
+   <requestHandler name="/suggest" class="org.apache.solr.handler.component.SearchHandler">  
+        <lst name="defaults">  
+            <str name="suggest">true</str>  
+            <str name="suggest.dictionary">suggest</str>  
+            <str name="suggest.count">10</str>  
+        </lst>  
+        <arr name="components">  
+            <str>suggest</str>  
+        </arr>  
+    </requestHandler>  
+
+http://localhost:8097/solr/mysqlcore/suggest?suggest=true&suggest.dictionary=suggest&wt=json&suggest.q=宝马&suggest.build=true
+
+{
+  "responseHeader":{
+    "status":0,
+    "QTime":55},
+  "command":"build",
+  "suggest":{"suggest":{
+      "宝马":{
+        "numFound":7,
+        "suggestions":[{
+            "term":"宝马1",
+            "weight":0,
+            "payload":""},
+          {
+            "term":"宝马2",
+            "weight":0,
+            "payload":""},
+          {
+            "term":"宝马3",
+            "weight":0,
+            "payload":""},
+          {
+            "term":"宝马4",
+            "weight":0,
+            "payload":""},
+          {
+            "term":"宝马5",
+            "weight":0,
+            "payload":""},
+          {
+            "term":"宝马6",
+            "weight":0,
+            "payload":""},
+          {
+            "term":"宝马7",
+            "weight":0,
+            "payload":""}]}}}}

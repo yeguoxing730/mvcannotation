@@ -31,3 +31,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 private Logger logger =  LoggerFactory.getLogger(this.getClass());
 
+
+---maven 中央仓库镜像代理
+<mirror>
+  <id>alimaven</id>
+  <name>aliyun maven</name>
+  <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+  <mirrorOf>central</mirrorOf>
+</mirror>
