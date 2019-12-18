@@ -124,6 +124,6 @@ public class MailServiceImpl implements MailService , ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        this.sendSimpleMail("gxye@gaojihealth.com","test simple mail"," hello this is simple mail");
+        this.sendSimpleMail("yeguoxing730@163.com","test simple mail"," hello this is simple mail");
     }
 }
